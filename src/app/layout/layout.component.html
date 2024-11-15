@@ -1,0 +1,42 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav
+    #drawer
+    class="sidenav"
+    fixedInViewport
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(isHandset$ | async) === false"
+  >
+    <mat-toolbar>Menu</mat-toolbar>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/produtos">Link 1</a>
+      <a mat-list-item href="#">Link 2</a>
+      <a mat-list-item href="#">Link 3</a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button
+        *ngIf="isHandset$ | async"
+        mat-icon-button
+        aria-label="Toggle sidenav"
+        (click)="drawer.toggle()"
+      >
+        <mat-icon>menu</mat-icon>
+      </button>
+      <button
+        *ngIf="!(isHandset$ | async)"
+        mat-icon-button
+        aria-label="Toggle sidenav"
+        (click)="drawer.toggle()"
+      >
+        <mat-icon>{{ drawer.opened ? 'close' : 'menu' }}</mat-icon>
+      </button>
+      <span>Cadastro de produtos</span>
+    </mat-toolbar>
+
+    <!-- Conteúdo dos componentes filhos será renderizado aqui -->
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
