@@ -1,54 +1,41 @@
-import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
+// Interface do Produto
 interface Produto {
-  nome: string;
-  data: string;
-  preco: number;
+    name: string;
+    price: number;
+    date: string;
 }
 
 @Component({
-  selector: 'app-produtos',
-  templateUrl: './produtos.component.html',
-  styleUrls: ['./produtos.component.scss']
+    selector: 'app-produtos',
+    templateUrl: './produtos.component.html',
+    styleUrls: ['./produtos.component.scss']
 })
-export class ProdutosComponent implements OnInit {
-  produtos: Produto[] = [];
-  nome: string = '';
-  data: string = '';
-  preco: number = 0; // Inicializado com 0 para evitar problemas com null
-  total: number = 0;
-  mostrarRelatorio: boolean = false;
+export class ProdutosComponent {
+  // Use a interface Produto para tipar os objetos
+    product: Produto = {
+    name: '',
+    price: 0,
+    date: ''
+};
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  products: Produto[] = []; // Lista de produtos tipada com a interface
 
-  ngOnInit() {
-    // Carregar dados iniciais, se necessário
-  }
+addProduct() {
+    // Adiciona o produto na lista
+    this.products.push({ ...this.product });
 
-  adicionarProduto(): void {
-    if (this.nome && this.data && this.preco > 0) {
-      const novoProduto: Produto = { nome: this.nome, data: this.data, preco: this.preco };
-      this.produtos.push(novoProduto);
+    // Reseta o formulário
+    this.product = {
+        name: '',
+        price: 0,
+        date: ''
+    };
+}
 
-      // Limpar os campos
-      this.nome = '';
-      this.data = '';
-      this.preco = 0;
-
-      // Atualizar o total e forçar a detecção de mudanças
-      this.atualizarTotal();
-      this.cdr.detectChanges();
-    } else {
-      alert("Por favor, preencha todos os campos corretamente.");
+totalPrice(): number {
+    // Calcula o total de preços
+    return this.products.reduce((sum, item) => sum + item.price, 0);
     }
-  }
-
-  atualizarTotal(): void {
-    this.total = this.produtos.reduce((acc, produto) => acc + produto.preco, 0);
-  }
-
-  gerarRelatorio(): void {
-    this.mostrarRelatorio = true;
-    this.cdr.detectChanges();
-  }
 }
