@@ -3,28 +3,29 @@
 
     <!-- Formulário para cadastro -->
     <form (ngSubmit)="addProduct()" #productForm="ngForm">
-    <div class="form-group">
-        <label for="name">Nome do Produto:</label>
-        <input type="text" id="name" class="form-control" [(ngModel)]="product.name" name="name" required/>
-    </div>
+
+        <div class="form-group">
+            <label for="name">Nome do Produto:</label>
+            <select id="name" class="form-control" [(ngModel)]="product.name" name="name" required>
+              <option *ngFor="let item of inventoryItems" [value]="item.name">{{ item.name }}</option>
+            </select>
+        </div>
 
     <div class="form-group">
         <label for="price">Preço:</label>
         <input type="number" id="price" class="form-control" [(ngModel)]="product.price" name="price" required/>
     </div>
 
-        <div class="form-group">
+    <div class="form-group">
         <label for="date">Data:</label>
         <input type="date" id="date" class="form-control" [(ngModel)]="product.date" name="date" required/>
-        </div>
+    </div>
 
-        <button type="submit" class="btn btn-primary" [disabled]="!productForm.valid">
-        Adicionar Produto
-        </button>
+    <button type="submit" class="btn btn-primary" [disabled]="!productForm.valid">Adicionar Produto</button>
+
     </form>
 
     <hr />
-
     <!-- Lista de Produtos -->
     <h2>Lista de Produtos</h2>
     <table class="table table-striped">
@@ -43,7 +44,6 @@
         </tr>
         </tbody>
     </table>
-
     <!-- Somatório de Preços -->
     <h3>Total: {{ totalPrice() | currency: 'BRL' }}</h3>
 </div>

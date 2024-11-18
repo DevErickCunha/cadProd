@@ -1,11 +1,5 @@
 import { Component } from '@angular/core';
-
-// Interface do Produto
-interface Produto {
-    name: string;
-    price: number;
-    date: string;
-}
+import { InventarioService } from '../../shared/inventario.service';
 
 @Component({
     selector: 'app-produtos',
@@ -13,29 +7,22 @@ interface Produto {
     styleUrls: ['./produtos.component.scss']
 })
 export class ProdutosComponent {
-  // Use a interface Produto para tipar os objetos
-    product: Produto = {
-    name: '',
-    price: 0,
-    date: ''
-};
+    product = { name: '', price: 0, date: '' };
+    products: any[] = [];
+    inventoryItems: any[] = [];
 
-  products: Produto[] = []; // Lista de produtos tipada com a interface
+    constructor(private inventoryService: InventarioService) {
+        this.inventoryItems = this.inventoryService.getItems(); // Obtém os itens do inventário
+    }
 
-addProduct() {
-    // Adiciona o produto na lista
-    this.products.push({ ...this.product });
+    addProduct() {
+        if (this.product.name && this.product.price > 0 && this.product.date) {
+        this.products.push({ ...this.product });
+        this.product = { name: '', price: 0, date: '' }; // Limpa o formulário
+        }
+    }
 
-    // Reseta o formulário
-    this.product = {
-        name: '',
-        price: 0,
-        date: ''
-    };
-}
-
-totalPrice(): number {
-    // Calcula o total de preços
-    return this.products.reduce((sum, item) => sum + item.price, 0);
+    totalPrice() {
+        return this.products.reduce((total, item) => total + item.price, 0);
     }
 }
