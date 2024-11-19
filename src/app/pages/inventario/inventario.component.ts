@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
+import { InventarioService } from '../../shared/inventario.service';
 
-interface Item {
+export interface Item {
   id: number;
   name: string;
   price: number;
@@ -12,6 +13,15 @@ interface Item {
   styleUrls: ['./inventario.component.scss']
 })
 export class InventarioComponent {
+  constructor(private inventoryService: InventarioService) 
+  {
+    this.inventoryService.getItems().subscribe(res=>{
+      console.log(res)
+      this.items = res
+      });
+      
+  }
+
   items: Item[] = [];
   newItem: Item = { id: 0, name: '', price: 0 };
   isEditing: boolean = false;
@@ -29,7 +39,7 @@ export class InventarioComponent {
       } else {
         // Adicionar novo item
         this.newItem.id = new Date().getTime();
-        this.items.push({ ...this.newItem });
+        this.inventoryService.addItem({...this.newItem})
         this.resetForm();
       }
     }
@@ -42,7 +52,7 @@ export class InventarioComponent {
   }
 
   deleteItem(id: number) {
-    this.items = this.items.filter(item => item.id !== id);
+    this.inventoryService.removeItem(id)
   }
 
   resetForm() {

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { InventarioService } from '../../shared/inventario.service';
+import { Item } from '../inventario/inventario.component';
 
 @Component({
     selector: 'app-produtos',
@@ -7,18 +8,20 @@ import { InventarioService } from '../../shared/inventario.service';
     styleUrls: ['./produtos.component.scss']
 })
 export class ProdutosComponent {
-    product = { name: '', price: 0, date: '' };
+    product = { name: '', qtd: 0, date: '' };
     products: any[] = [];
-    inventoryItems: any[] = [];
+    inventoryItems: Item[] = [];
 
     constructor(private inventoryService: InventarioService) {
-        this.inventoryItems = this.inventoryService.getItems(); // Obtém os itens do inventário
+    this.inventoryService.getItems().subscribe(res=>{
+        this.inventoryItems = res
+        }); // Obtém os itens do inventário
     }
 
     addProduct() {
-        if (this.product.name && this.product.price > 0 && this.product.date) {
-        this.products.push({ ...this.product });
-        this.product = { name: '', price: 0, date: '' }; // Limpa o formulário
+        if (this.product.name && this.product.qtd > 0 && this.product.date) {
+        this.products.push({ ...this.product, price: this.inventoryItems.find(i => i.name==this.product.name)?.price as number * this.product.qtd});
+        this.product = { name: '', qtd: 0, date: '' }; // Limpa o formulário
         }
     }
 
